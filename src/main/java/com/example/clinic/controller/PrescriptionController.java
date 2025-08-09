@@ -16,14 +16,14 @@ public class PrescriptionController {
     @PostMapping
     public ResponseEntity<?> savePrescription(
             @RequestBody Prescription prescription,
-            @RequestHeader("Authorization") String token) {
+            @RequestHeader(value = "Authorization", required = false) String token) {
 
-        if (token == null || !token.startsWith("Bearer ")) {
-            return ResponseEntity.status(401).body("Invalid or missing token");
+        if (token == null || !prescriptionService.validateToken(token)) {
+            return ResponseEntity.status(401).body(Map.of("error", "Invalid or missing token"));
         }
 
-        if (prescription.getPatientId() == null || prescription.getDetails() == null) {
-            return ResponseEntity.badRequest().body("Missing prescription details");
+        if (prescription.getPatientId() == null || prescription.getDetails() == null || prescription.getDetails().isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Missing prescription details"));
         }
 
         Prescription saved = prescriptionService.savePrescription(prescription);

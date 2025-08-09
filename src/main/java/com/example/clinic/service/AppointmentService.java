@@ -14,10 +14,12 @@ public class AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
+    // Booking method saves appointment
     public Appointment bookAppointment(Appointment appointment) {
         return appointmentRepository.save(appointment);
     }
 
+    // Retrieve appointments for a doctor on a specific date
     public List<Appointment> getAppointmentsForDoctor(Long doctorId, LocalDate date) {
         return appointmentRepository.findByDoctorIdAndDate(doctorId, date);
     }
